@@ -1,0 +1,17 @@
+{
+	"name": "nijamericabackend",
+	"version": "1.0.0",
+	"author": "Congredia Technlogies - Samuel Paschalson",
+	"scripts": {
+		"dev": "nodemon -r dotenv/config src/index.js dotenv_config_path=env/local.env"
+	},
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.0",
+		"jsonwebtoken": "^9.0.2",
+		"mongoose": "^8.7.0",
+		"morgan": "^1.10.0",
+		"nodemon": "^3.1.7"
+	}
+}
