@@ -50,8 +50,8 @@ exports.list_business = async (req, res) => {
 };
 
 exports.fetch_business = async (req, res) => {
-  const { business_id } = req.params; // Get business_id from the request parameters
-  const { business_name } = req.body;
+  const { business_id } = req.params; // Business ID from URL params
+  const { page = 1, limit = 10 } = req.query; // Default page is 1, limit is 10 if not provided
 
   try {
     if (!business_id) {
@@ -61,7 +61,17 @@ exports.fetch_business = async (req, res) => {
       });
     }
 
-    const businesses = await Business.find({ business_id });
+    // Convert page and limit to numbers to avoid issues with string values from req.query
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    // Find all businesses with the provided business_id and apply pagination
+    const businesses = await Business.find({ business_id })
+      .skip((pageNum - 1) * limitNum) // Skip the previous pages' items
+      .limit(limitNum); // Limit the number of results returned
+
+    // Get the total count of businesses matching the business_id for pagination metadata
+    const totalBusinesses = await Business.countDocuments({ business_id });
 
     if (businesses.length === 0) {
       return res.status(404).json({
@@ -74,9 +84,15 @@ exports.fetch_business = async (req, res) => {
       success: true,
       message: "Businesses retrieved successfully",
       data: businesses,
+      pagination: {
+        currentPage: pageNum,
+        itemsPerPage: limitNum,
+        totalItems: totalBusinesses,
+        totalPages: Math.ceil(totalBusinesses / limitNum),
+      },
       request: {
         type: "GET",
-        url: `http://localhost:3000/api/nija/business/fetch-business/${business_id}`,
+        url: `http://localhost:3000/api/nija/business/fetch-business/${business_id}?page=${pageNum}&limit=${limitNum}`,
       },
     });
   } catch (error) {
@@ -86,6 +102,7 @@ exports.fetch_business = async (req, res) => {
     });
   }
 };
+
 
 exports.count = async (req, res) => {
   try {
