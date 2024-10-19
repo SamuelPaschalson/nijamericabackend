@@ -32,14 +32,8 @@ exports.list_business = async (req, res) => {
     const savedUser = await newUser.save();
 
     if (savedUser) {
-      const accessToken = jwt.sign(
-        { id: savedUser._id, verified: false },
-        process.env.JWT_KEY,
-        { expiresIn: "30d" }
-      );
       return res.status(201).json({
         success: true,
-        // token: accessToken,
         data: savedUser,
         request: {
           type: "POST",
@@ -56,47 +50,33 @@ exports.list_business = async (req, res) => {
 };
 
 exports.fetch_business = async (req, res) => {
-  const { identifier, password } = req.body;
+  const { business_id } = req.params; // Get business_id from the request parameters
+  const { business_name } = req.body;
 
   try {
-    if (!identifier) {
+    if (!business_id) {
       return res.status(400).json({
         success: false,
-        message: "Phone number or email is required",
+        message: "Business ID is required",
       });
     }
 
-    const isEmail = emailRegex.test(identifier);
-    const query = isEmail ? { email: identifier } : { phonenumber: identifier };
-    const user = await User.findOne(query);
+    const businesses = await Business.find({ business_id });
 
-    if (!user) {
+    if (businesses.length === 0) {
       return res.status(404).json({
         success: false,
-        message: `No user found using the ${
-          isEmail ? "email" : "phone number"
-        }`,
+        message: `No businesses found with the business ID: ${business_id}`,
       });
     }
 
-    if (user.password !== password) {
-      return res.status(401).json({
-        success: false,
-        message: "Incorrect password",
-      });
-    }
-
-    const accessToken = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
-      expiresIn: "30d",
-    });
     return res.status(200).json({
       success: true,
-      message: "Login successful, token generated",
-      token: accessToken,
-      data: user,
+      message: "Businesses retrieved successfully",
+      data: businesses,
       request: {
-        type: "POST",
-        url: "http://localhost:3000/api/sonic/user/login",
+        type: "GET",
+        url: `http://localhost:3000/api/nija/business/fetch-business/${business_id}`,
       },
     });
   } catch (error) {
