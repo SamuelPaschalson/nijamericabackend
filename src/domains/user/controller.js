@@ -104,3 +104,63 @@ exports.user_login = async (req, res) => {
 		});
 	}
 };
+
+exports.update_user = async (req, res) => {
+  const { user_id } = req.params; // User ID from request params
+  const { firstname, lastname, email, phonenumber, password } = req.body; // Updated data
+
+  try {
+    // Validate email and phone number (if present in the request body)
+    if (email && !emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid email format",
+      });
+    }
+
+    if (phonenumber && !phoneRegex.test(phonenumber)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid phone number format",
+      });
+    }
+
+    // Find the user by ID and update the provided fields
+    const updatedUser = await User.findByIdAndUpdate(
+      user_id,
+      {
+        $set: {
+          firstname,
+          lastname,
+          email,
+          phonenumber,
+          password,
+        },
+      },
+      { new: true, runValidators: true } // Return the updated user, and run validators on updated fields
+    );
+
+    // Check if user exists
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      data: updatedUser,
+      request: {
+        type: "PUT",
+        url: `http://localhost:3000/api/sonic/user/${user_id}`,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
