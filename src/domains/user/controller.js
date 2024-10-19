@@ -118,12 +118,12 @@ exports.update_user = async (req, res) => {
       });
     }
 
-    if (phonenumber && !phoneRegex.test(phonenumber)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid phone number format",
-      });
-    }
+    // if (phonenumber && !phoneRegex.test(phonenumber)) {
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Invalid phone number format",
+    //   });
+    // }
 
     // Find the user by ID and update the provided fields
     const updatedUser = await User.findByIdAndUpdate(
