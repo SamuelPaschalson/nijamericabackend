@@ -199,3 +199,34 @@ exports.change_password = async (req, res) => {
     });
   }
 };
+
+exports.delete_account = async (req, res) => {
+  const { userId } = req.params; // Extract userId from URL parameters
+
+  try {
+    // Find the user by their ID
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // Delete the user account
+    await User.findByIdAndDelete(userId);
+
+    // Return a success message
+    return res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    // Handle any errors
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
