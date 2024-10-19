@@ -117,14 +117,6 @@ exports.update_user = async (req, res) => {
         message: "Invalid email format",
       });
     }
-
-    // if (phonenumber && !phoneRegex.test(phonenumber)) {
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Invalid phone number format",
-    //   });
-    // }
-
     // Find the user by ID and update the provided fields
     const updatedUser = await User.findByIdAndUpdate(
       user_id,
@@ -166,12 +158,12 @@ exports.update_user = async (req, res) => {
 
 
 exports.change_password = async (req, res) => {
-  const { userId } = req.params; // Extract userId from URL parameters
+  const { user_id } = req.params; // Extract user_id from URL parameters
   const { new_password } = req.body; // Extract new password from request body
 
   try {
     // Find the user by their ID
-    const user = await User.findById(userId);
+    const user = await User.findById(user_id);
 
     if (!user) {
       return res.status(404).json({
@@ -207,4 +199,3 @@ exports.change_password = async (req, res) => {
     });
   }
 };
-
