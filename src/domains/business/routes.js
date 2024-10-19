@@ -10,6 +10,6 @@ router.get("/add-reviews", businessController.count);
 router.get("/reviews", businessController.count);
 router.get("/add-products", businessController.count);
 router.get("/products", businessController.count);
-router.get("/count", businessController.count);
+router.get("/count/:userId", businessController.count_businesses_by_user);
 
 module.exports = router;
