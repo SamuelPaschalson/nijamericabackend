@@ -104,26 +104,32 @@ exports.fetch_business = async (req, res) => {
 };
 
 
-exports.count = async (req, res) => {
-  try {
-    const count = await Business.countDocuments();
-    return res.status(200).send({
-      success: true,
-      message: `List of businesses`,
-      data: count,
-      request: {
-        type: "POST",
-        url: "http://localhost:3000/api/sonic/user/login",
-      },
-    });
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+exports.count_businesses_by_user = async (req, res) => {
+    const { userId } = req.params; // Extract user ID from request params
 
+    try {
+        // Count the number of businesses associated with the user ID
+        const businessCount = await Business.countDocuments({ business_id: userId });
+
+        if (businessCount === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No businesses found for this user",
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: `Total businesses for user ${userId}: ${businessCount}`,
+            count: businessCount,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: error.message,
+        });
+    }
+};
 exports.count = async (req, res) => {
   try {
     const count = await Business.countDocuments();
