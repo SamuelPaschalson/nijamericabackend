@@ -107,7 +107,7 @@ exports.user_login = async (req, res) => {
 
 exports.update_user = async (req, res) => {
   const { user_id } = req.params; // User ID from request params
-  const { firstname, lastname, email, phonenumber, password } = req.body; // Updated data
+  const { firstname, lastname, email, phonenumber } = req.body; // Updated data
 
   try {
     // Validate email and phone number (if present in the request body)
@@ -134,7 +134,6 @@ exports.update_user = async (req, res) => {
           lastname,
           email,
           phonenumber,
-          password,
         },
       },
       { new: true, runValidators: true } // Return the updated user, and run validators on updated fields
