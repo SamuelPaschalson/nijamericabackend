@@ -13,6 +13,7 @@ exports.list_business = async (req, res) => {
     location: req.body.location,
     business_owner: req.body.business_owner,
     business_description: req.body.business_description,
+    business_category: req.body.business_category,
     product: req.body.product,
     review: req.body.review,
   };
@@ -149,3 +150,38 @@ exports.count = async (req, res) => {
     });
   }
 };
+
+router.get('/search', async (req, res) => {
+    try {
+        const { business_name, location, business_category } = req.query;
+
+        // Building the search query
+        let searchQuery = {};
+
+        if (business_name) {
+            searchQuery.business_name = { $regex: business_name, $options: 'i' }; // Case-insensitive search
+        }
+        if (location) {
+            searchQuery.location = { $regex: location, $options: 'i' }; // Case-insensitive search
+        }
+        if (business_category) {
+            searchQuery.business_category = { $regex: business_category, $options: 'i' }; // Case-insensitive search
+        }
+
+        // Fetch businesses based on query
+        const businesses = await Business.find(searchQuery);
+
+        // Return results
+        res.status(200).json({
+            success: true,
+            // count: businesses.length,
+            data: businesses
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: 'Server Error',
+            error: err.message
+        });
+    }
+});
