@@ -56,6 +56,9 @@ const businessSchema = new mongoose.Schema({
   business_description: {
     type: String,
   },
+  business_category: {
+    type: String,
+  },
   location: {
     type: String,
   },
