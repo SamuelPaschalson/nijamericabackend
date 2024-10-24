@@ -151,7 +151,7 @@ exports.count = async (req, res) => {
   }
 };
 
-exports.count = async (req, res) => {
+exports.search = async (req, res) => {
     try {
         const { business_name, location, business_category } = req.query;
         let searchQuery = {};
