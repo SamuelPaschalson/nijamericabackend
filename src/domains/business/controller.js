@@ -151,13 +151,10 @@ exports.count = async (req, res) => {
   }
 };
 
-router.get('/search', async (req, res) => {
+exports.count = async (req, res) => {
     try {
         const { business_name, location, business_category } = req.query;
-
-        // Building the search query
         let searchQuery = {};
-
         if (business_name) {
             searchQuery.business_name = { $regex: business_name, $options: 'i' }; // Case-insensitive search
         }
@@ -167,21 +164,20 @@ router.get('/search', async (req, res) => {
         if (business_category) {
             searchQuery.business_category = { $regex: business_category, $options: 'i' }; // Case-insensitive search
         }
-
-        // Fetch businesses based on query
         const businesses = await Business.find(searchQuery);
-
-        // Return results
         res.status(200).json({
             success: true,
-            // count: businesses.length,
-            data: businesses
+            message: `Below is your searched data`,
+            data: businesses,
+            request: {
+              type: "POST",
+              url: "http://localhost:3000/api/sonic/user/login",
+            },
         });
     } catch (err) {
-        res.status(500).json({
+        return res.status(500).json({
             success: false,
-            message: 'Server Error',
-            error: err.message
+            message: err.message
         });
     }
-});
+};
