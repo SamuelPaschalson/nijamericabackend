@@ -67,7 +67,7 @@ const businessSchema = new mongoose.Schema({
     required: true,
   },
   reviews: [reviewSchema], // Business reviews
-  products: [productSchema],
+  product: [productSchema],
 });
 
 module.exports = mongoose.model("Business", businessSchema, "business");
