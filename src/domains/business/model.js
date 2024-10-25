@@ -37,7 +37,6 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
   },
-  reviews: [reviewSchema], // Product reviews
 });
 
 const businessSchema = new mongoose.Schema({
