@@ -153,18 +153,20 @@ exports.count = async (req, res) => {
 
 exports.search = async (req, res) => {
     try {
-        const { business_name, location, business_category } = req.query;
-        let searchQuery = {};
-        if (business_name) {
-            searchQuery.business_name = { $regex: business_name, $options: 'i' }; // Case-insensitive search
+        const { query } = req.query;
+        if (!query) {
+            return res.status(400).json({ message: "Query parameter is required" });
         }
-        if (location) {
-            searchQuery.location = { $regex: location, $options: 'i' }; // Case-insensitive search
+        const businesses = await Business.find({
+            $or: [
+                { business_name: { $regex: query, $options: 'i' } },
+                { location: { $regex: query, $options: 'i' } },
+                { business_category: { $regex: query, $options: 'i' } }
+            ]
+        });
+        if (businesses.length === 0) {
+            return res.status(404).json({ message: "No businesses found matching your query" });
         }
-        if (business_category) {
-            searchQuery.business_category = { $regex: business_category, $options: 'i' }; // Case-insensitive search
-        }
-        const businesses = await Business.find(searchQuery);
         res.status(200).json({
             success: true,
             message: `Below is your searched data`,
