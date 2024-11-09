@@ -104,6 +104,51 @@ exports.fetch_business = async (req, res) => {
   }
 };
 
+exports.fetch_all_businesses = async (req, res) => {
+  const { page = 1, limit = 10 } = req.query; // Default page is 1, limit is 10 if not provided
+
+  try {
+    // Convert page and limit to numbers to avoid issues with string values from req.query
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    // Find all businesses and apply pagination
+    const businesses = await Business.find()
+      .skip((pageNum - 1) * limitNum) // Skip the previous pages' items
+      .limit(limitNum); // Limit the number of results returned
+
+    // Get the total count of businesses for pagination metadata
+    const totalBusinesses = await Business.countDocuments();
+
+    if (businesses.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No businesses found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Businesses retrieved successfully",
+      data: businesses,
+      pagination: {
+        currentPage: pageNum,
+        itemsPerPage: limitNum,
+        totalItems: totalBusinesses,
+        totalPages: Math.ceil(totalBusinesses / limitNum),
+      },
+      request: {
+        type: "GET",
+        url: `http://localhost:3000/api/nija/business/fetch-all-businesses?page=${pageNum}&limit=${limitNum}`,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 exports.count_businesses_by_user = async (req, res) => {
     const { userId } = req.params; // Extract user ID from request params
