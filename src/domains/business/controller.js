@@ -13,6 +13,7 @@ exports.list_business = async (req, res) => {
     location: req.body.location,
     business_owner: req.body.business_owner,
     business_description: req.body.business_description,
+    business_phone: req.body.business_phone,
     business_category: req.body.business_category,
     product: req.body.product,
     review: req.body.review,
