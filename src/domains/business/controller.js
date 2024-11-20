@@ -23,6 +23,21 @@ exports.list_business = async (req, res) => {
 
     const imagePath = req.file ? req.file.path : null; // Single image path
 
+  // Check if 'product' is a string and parse it as an object if it is
+    let parsedProduct = product;
+    if (typeof product === "string") {
+      try {
+        parsedProduct = JSON.parse(product); // Convert stringified product to an object
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid product data",
+          error: error.message,
+        });
+      }
+    }
+  
+    // If product is valid, proceed with creating the business object
     const userdata = {
       business_name,
       location,
@@ -31,7 +46,7 @@ exports.list_business = async (req, res) => {
       business_phone,
       business_category,
       business_id,
-      product,
+      product: Array.isArray(parsedProduct) ? parsedProduct : [parsedProduct], // Ensure product is an array
       review,
       business_image: imagePath, // Save single image path
     };
