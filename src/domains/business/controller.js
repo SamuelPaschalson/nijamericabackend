@@ -74,7 +74,6 @@ exports.list_business = async (req, res) => {
         message: error.message,
       });
     }
-  });
 };
 
 exports.fetch_business = async (req, res) => {
