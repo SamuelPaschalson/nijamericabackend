@@ -1,22 +1,22 @@
 const Business = require("./model");
 const jwt = require("jsonwebtoken");
 // const nodemailer = require("nodemailer");
-const upload = require("./upload");
+// const upload = require("./upload");
 
 // Regular expressions for email and phone number validation
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$/;
 
 exports.list_business = async (req, res) => {
-  console.log(req.file);
-  upload.single("business_image")(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({
-        success: false,
-        message: "Image upload failed",
-        error: err.message,
-      });
-    }
+  console.log("Uploaded file:", req.file);
+  // upload.single("business_image")(req, res, async (err) => {
+  //   if (err) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       message: "Image upload failed",
+  //       error: err.message,
+  //     });
+  //   }
 
     const {
       business_name,
