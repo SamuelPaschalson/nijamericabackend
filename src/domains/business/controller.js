@@ -21,7 +21,7 @@ exports.list_business = async (req, res) => {
       business_id,
     } = req.body;
 
-    const imagePath = req.file ? req.file.path : null; // Single image path
+    const imagePath = req.file ? req.file.filename : null; // Single image path
 
   // Check if 'product' is a string and parse it as an object if it is
     let parsedProduct = product;
