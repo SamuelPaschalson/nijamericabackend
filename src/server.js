@@ -5,6 +5,7 @@ const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("express").json;
 const routes = require("./routes");
+const path = require("path");
 const connectDB = require("./config/db");
 connectDB();
 
