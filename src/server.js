@@ -12,5 +12,5 @@ app.use(cors());
 app.use(bodyParser());
 app.use(routes);
 app.use(morgan("dev"));
-app.use(express.static('domains/business/uploads'));
+app.use(express.static('uploads'));
 module.exports = app;
