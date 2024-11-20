@@ -5,8 +5,8 @@ const path = require("path");
 const storage = multer.diskStorage({
   // Specify the destination folder to save uploaded files
   destination: (req, file, cb) => {
-    // This will save uploaded files in the src/domains/business/uploads folder
-    cb(null, path.join(__dirname, "uploads")); // Use path.join to handle cross-platform paths
+    // This will save uploaded files in the src/uploads folder
+    cb(null, path.join(__dirname, "../../uploads")); // Use path.join to handle cross-platform paths
   },
   // Specify the filename format
   filename: (req, file, cb) => {
