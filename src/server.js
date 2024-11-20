@@ -1,5 +1,6 @@
 require("./config/db");
-const app = require("express")();
+const express = require("express");
+const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
 const bodyParser = require("express").json;
@@ -11,4 +12,5 @@ app.use(cors());
 app.use(bodyParser());
 app.use(routes);
 app.use(morgan("dev"));
+app.use(express.static('domains/business/uploads'));
 module.exports = app;
