@@ -48,7 +48,7 @@ exports.list_business = async (req, res) => {
       business_id,
       product: Array.isArray(parsedProduct) ? parsedProduct : [parsedProduct], // Ensure product is an array
       review,
-      business_image: imagePath, // Save single image path
+      business_image: `/uploads/${imagePath}`, // Save single image path
     };
 
     try {
