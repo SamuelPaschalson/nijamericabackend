@@ -9,15 +9,6 @@ const phoneRegex = /^\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$/;
 
 exports.list_business = async (req, res) => {
   console.log("Uploaded file:", req.file);
-  // upload.single("business_image")(req, res, async (err) => {
-  //   if (err) {
-  //     return res.status(400).json({
-  //       success: false,
-  //       message: "Image upload failed",
-  //       error: err.message,
-  //     });
-  //   }
-
     const {
       business_name,
       location,
