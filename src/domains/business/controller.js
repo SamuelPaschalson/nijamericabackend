@@ -8,7 +8,6 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$/;
 
 exports.list_business = async (req, res) => {
-  console.log("Uploaded file:", req.file);
     const {
       business_name,
       location,
