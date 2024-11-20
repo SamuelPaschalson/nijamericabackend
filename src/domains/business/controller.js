@@ -1,54 +1,79 @@
 const Business = require("./model");
 const jwt = require("jsonwebtoken");
 // const nodemailer = require("nodemailer");
+const upload = require("./upload");
 
 // Regular expressions for email and phone number validation
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phoneRegex = /^\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$/;
 
 exports.list_business = async (req, res) => {
-  const userdata = {
-    business_id: req.body.business_id,
-    business_name: req.body.business_name,
-    location: req.body.location,
-    business_owner: req.body.business_owner,
-    business_description: req.body.business_description,
-    business_phone: req.body.business_phone,
-    business_category: req.body.business_category,
-    product: req.body.product,
-    review: req.body.review,
-  };
-
-  try {
-    const userExist = await Business.findOne({
-      email: req.body.business_name,
-    });
-    if (userExist) {
-      return res.status(409).json({
+  upload.single("business_image")(req, res, async (err) => {
+    if (err) {
+      return res.status(400).json({
         success: false,
-        message: "Business Name already exists",
+        message: "Image upload failed",
+        error: err.message,
       });
     }
 
-    const newUser = new Business(userdata);
-    const savedUser = await newUser.save();
+    const {
+      business_name,
+      location,
+      business_owner,
+      business_description,
+      business_phone,
+      business_category,
+      product,
+      review,
+      business_id,
+    } = req.body;
 
-    if (savedUser) {
-      return res.status(201).json({
-        success: true,
-        data: savedUser,
-        request: {
-          type: "POST",
-          url: "http://localhost:3000/api/nija/business/add-business",
-        },
+    const imagePath = req.file ? req.file.path : null; // Single image path
+
+    const userdata = {
+      business_name,
+      location,
+      business_owner,
+      business_description,
+      business_phone,
+      business_category,
+      business_id,
+      product,
+      review,
+      business_image: imagePath, // Save single image path
+    };
+
+    try {
+      const businessExist = await Business.findOne({ business_name });
+
+      if (businessExist) {
+        return res.status(409).json({
+          success: false,
+          message: "Business Name already exists",
+        });
+      }
+
+      const newBusiness = new Business(userdata);
+      const savedBusiness = await newBusiness.save();
+
+      if (savedBusiness) {
+        return res.status(201).json({
+          success: true,
+          data: savedBusiness,
+          request: {
+            type: "POST",
+            url: "http://localhost:3000/api/nija/business/add-business",
+          },
+        });
+      }
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
       });
     }
-  } catch (error) {
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
+  });
 };
 
 exports.fetch_business = async (req, res) => {
