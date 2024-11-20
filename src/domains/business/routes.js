@@ -2,11 +2,12 @@ const businessController = require("./controller");
 // const nodemailer = require("nodemailer");
 const express = require("express");
 const router = express.Router();
+const upload = require("./upload");
 
 // create a new business
 router.get("/fetch-business/:business_id", businessController.fetch_business);
 router.get("/fetch-all-business", businessController.fetch_all_businesses);
-router.post("/add-business", businessController.list_business);
+router.post("/add-business",upload.single("business_image"), businessController.list_business);
 router.get("/add-reviews", businessController.count);
 router.get("/reviews", businessController.count);
 router.get("/add-products", businessController.count);
